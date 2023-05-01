@@ -94,13 +94,13 @@ void SV_ParseConsistencyResponse(client_t *pSenderClient)
 	Q_memset(nullbuffer, 0, sizeof(nullbuffer));
 	int value = MSG_ReadShort();
 
-	if (value <= 0 || !SZ_HasSomethingToRead(&net_message, value))
+	/*if (value <= 0 || !SZ_HasSomethingToRead(&net_message, value))
 	{
 		msg_badread = TRUE;
 		Con_DPrintf("%s:  %s:%s invalid length: %d\n", __func__, host_client->name, NET_AdrToString(host_client->netchan.remote_address), value);
-		//SV_DropClient(host_client, FALSE, "Invalid length");
+		SV_DropClient(host_client, FALSE, "Invalid length");
 		return;
-	}
+	}*/
 
 	COM_UnMunge(&net_message.data[msg_readcount], value, g_psvs.spawncount);
 	MSG_StartBitReading(&net_message);
@@ -191,13 +191,13 @@ void SV_ParseConsistencyResponse(client_t *pSenderClient)
 	}
 
 	MSG_EndBitReading(&net_message);
-	if (c < 0 || length != g_psv.num_consistency)
+	/*if (c < 0 || length != g_psv.num_consistency)
 	{
 		msg_badread = 1;
 		Con_Printf("SV_ParseConsistencyResponse:  %s:%s sent bad file data\n", host_client->name, NET_AdrToString(host_client->netchan.remote_address));
 		SV_DropClient(host_client, FALSE, "Bad file data");
 		return;
-	}
+	}*/
 
 	if (c > 0)
 	{
@@ -1585,13 +1585,13 @@ void SV_ParseMove(client_t *pSenderClient)
 	mlen = MSG_ReadByte();
 	cbchecksum = MSG_ReadByte();
 
-	if (mlen <= 0 || !SZ_HasSpaceToRead(&net_message, mlen))
+	/*if (mlen <= 0 || !SZ_HasSpaceToRead(&net_message, mlen))
 	{
 		msg_badread = TRUE;
 		Con_DPrintf("%s:  %s:%s invalid length: %d\n", __func__, host_client->name, NET_AdrToString(host_client->netchan.remote_address), mlen);
-		//SV_DropClient(host_client, FALSE, "Invalid length");
+		SV_DropClient(host_client, FALSE, "Invalid length");
 		return;
-	}
+	}*/
 
 	COM_UnMunge(&net_message.data[placeholder + 1], mlen, host_client->netchan.incoming_sequence);
 
@@ -1603,13 +1603,13 @@ void SV_ParseMove(client_t *pSenderClient)
 	pSenderClient->m_bLoopback = (packetLossByte >> 7) & 1;
 	totalcmds = numcmds + numbackup;
 	net_drop += 1 - numcmds;
-	if (totalcmds < 0 || totalcmds >= CMD_MAXBACKUP - 1)
+	/*if (totalcmds < 0 || totalcmds >= CMD_MAXBACKUP - 1)
 	{
-		//Con_Printf("SV_ReadClientMessage: too many cmds %i sent for %s/%s\n", totalcmds, host_client->name, NET_AdrToString(host_client->netchan.remote_address));
-		//SV_DropClient(host_client, FALSE, "CMD_MAXBACKUP hit");
+		Con_Printf("SV_ReadClientMessage: too many cmds %i sent for %s/%s\n", totalcmds, host_client->name, NET_AdrToString(host_client->netchan.remote_address));
+		SV_DropClient(host_client, FALSE, "CMD_MAXBACKUP hit");
 		msg_badread = 1;
 		return;
-	}
+	}*/
 
 	usercmd_t* from = &cmdNull;
 	for (int i = totalcmds - 1; i >= 0; i--)
@@ -1726,12 +1726,12 @@ void SV_ParseVoiceData(client_t *cl)
 	char chReceived[4096];
 	int iClient = cl - g_psvs.clients;
 	unsigned int nDataLength = MSG_ReadShort();
-	if (nDataLength > sizeof(chReceived))
+	/*if (nDataLength > sizeof(chReceived))
 	{
-		//Con_DPrintf("SV_ParseVoiceData: invalid incoming packet.\n");
-		//SV_DropClient(cl, FALSE, "Invalid voice data\n");
-		//return;
-	}
+		Con_DPrintf("SV_ParseVoiceData: invalid incoming packet.\n");
+		SV_DropClient(cl, FALSE, "Invalid voice data\n");
+		return;
+	}*/
 
 	MSG_ReadBuf(nDataLength, chReceived);
 	cl->m_lastvoicetime = g_psv.time;
@@ -1794,16 +1794,16 @@ void SV_ParseCvarValue2(client_t *cl)
 
 void EXT_FUNC SV_HandleClientMessage_api(IGameClient* client, uint8 opcode) {
 	client_t* cl = client->GetClient();
-	if (opcode < clc_bad || opcode > clc_cvarvalue2)
+	/*if (opcode < clc_bad || opcode > clc_cvarvalue2)
 	{
 		// TODO: Are we forced to use msg_badread for break the loop.
 		static_assert(REHLDS_API_VERSION_MAJOR <= 3, "Bump major API DETECTED!! You shall rework the hookchain, make function returnable");
 		msg_badread = 1;
 
-		//Con_Printf("SV_ReadClientMessage: unknown command char (%d)\n", opcode);
-		//SV_DropClient(cl, FALSE, "Bad command character in client command");
+		Con_Printf("SV_ReadClientMessage: unknown command char (%d)\n", opcode);
+		SV_DropClient(cl, FALSE, "Bad command character in client command");
 		return;
-	}
+	}*/
 
 #ifdef REHLDS_FIXES
 	// Save current name of the client before a possible kick
