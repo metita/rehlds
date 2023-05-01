@@ -98,7 +98,7 @@ void SV_ParseConsistencyResponse(client_t *pSenderClient)
 	{
 		msg_badread = TRUE;
 		Con_DPrintf("%s:  %s:%s invalid length: %d\n", __func__, host_client->name, NET_AdrToString(host_client->netchan.remote_address), value);
-		SV_DropClient(host_client, FALSE, "Invalid length");
+		//SV_DropClient(host_client, FALSE, "Invalid length");
 		return;
 	}
 
