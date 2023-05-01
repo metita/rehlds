@@ -1728,9 +1728,9 @@ void SV_ParseVoiceData(client_t *cl)
 	unsigned int nDataLength = MSG_ReadShort();
 	if (nDataLength > sizeof(chReceived))
 	{
-		Con_DPrintf("SV_ParseVoiceData: invalid incoming packet.\n");
-		SV_DropClient(cl, FALSE, "Invalid voice data\n");
-		return;
+		//Con_DPrintf("SV_ParseVoiceData: invalid incoming packet.\n");
+		//SV_DropClient(cl, FALSE, "Invalid voice data\n");
+		//return;
 	}
 
 	MSG_ReadBuf(nDataLength, chReceived);
