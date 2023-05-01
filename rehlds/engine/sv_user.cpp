@@ -1605,8 +1605,8 @@ void SV_ParseMove(client_t *pSenderClient)
 	net_drop += 1 - numcmds;
 	if (totalcmds < 0 || totalcmds >= CMD_MAXBACKUP - 1)
 	{
-		Con_Printf("SV_ReadClientMessage: too many cmds %i sent for %s/%s\n", totalcmds, host_client->name, NET_AdrToString(host_client->netchan.remote_address));
-		SV_DropClient(host_client, FALSE, "CMD_MAXBACKUP hit");
+		//Con_Printf("SV_ReadClientMessage: too many cmds %i sent for %s/%s\n", totalcmds, host_client->name, NET_AdrToString(host_client->netchan.remote_address));
+		//SV_DropClient(host_client, FALSE, "CMD_MAXBACKUP hit");
 		msg_badread = 1;
 		return;
 	}
@@ -1800,8 +1800,8 @@ void EXT_FUNC SV_HandleClientMessage_api(IGameClient* client, uint8 opcode) {
 		static_assert(REHLDS_API_VERSION_MAJOR <= 3, "Bump major API DETECTED!! You shall rework the hookchain, make function returnable");
 		msg_badread = 1;
 
-		Con_Printf("SV_ReadClientMessage: unknown command char (%d)\n", opcode);
-		SV_DropClient(cl, FALSE, "Bad command character in client command");
+		//Con_Printf("SV_ReadClientMessage: unknown command char (%d)\n", opcode);
+		//SV_DropClient(cl, FALSE, "Bad command character in client command");
 		return;
 	}
 
@@ -1818,7 +1818,7 @@ void EXT_FUNC SV_HandleClientMessage_api(IGameClient* client, uint8 opcode) {
 #ifdef REHLDS_FIXES
 	if (msg_badread)
 	{
-		Con_Printf("SV_ReadClientMessage: badread on %s, opcode %s\n", name, sv_clcfuncs[opcode].pszname);
+		//Con_Printf("SV_ReadClientMessage: badread on %s, opcode %s\n", name, sv_clcfuncs[opcode].pszname);
 	}
 #endif
 
