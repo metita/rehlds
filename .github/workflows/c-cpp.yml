@@ -161,7 +161,7 @@ jobs:
 
       - name: Build and Run unittests
         run: |
-          rm -rf build && CC=icc CXX=icpc cmake -DCMAKE_BUILD_TYPE=Debug
+          rm -rf build && CC=icc CXX=icpc cmake -DCMAKE_BUILD_TYPE=Debug Unittests -B build && cmake --build build -j8
           retVal=0
           export LD_LIBRARY_PATH="rehlds/lib/linux32:$LD_LIBRARY_PATH"
           ./build/rehlds/engine_i486 2> /dev/null > result.log || retVal=$?
