@@ -586,9 +586,9 @@ void MSG_WriteBitData(void *src, int length)
 
 void MSG_WriteBitAngle(float fAngle, int numbits)
 {
-	if (numbits >= 32)
+	if (numbits > 22)
 	{
-		Sys_Error("%s: Can't write bit angle with 32 bits precision\n", __func__);
+		Sys_Error("%s: Can't write bit angle with more than 22 bits precision\n", __func__);
 	}
 
 	uint32 shift = (1 << numbits);
@@ -1976,6 +1976,34 @@ NOXREF int COM_ExpandFilename(char *filename)
 	FS_GetLocalPath(filename, netpath, ARRAYSIZE(netpath));
 	Q_strcpy(filename, netpath);
 	return *filename != 0;
+}
+
+// small helper function shared by lots of modules
+qboolean COM_IsAbsolutePath(const char *pStr)
+{
+	if (strchr(pStr, ':') || pStr[0] == '/' || pStr[0] == '\\')
+		return FALSE;
+
+	return TRUE;
+}
+
+qboolean COM_IsValidPath(const char *pszFilename)
+{
+	if (!pszFilename)
+		return FALSE;
+
+	if (Q_strlen(pszFilename) <= 0    ||
+		Q_strstr(pszFilename, "\\\\") ||	// to protect network paths
+		Q_strstr(pszFilename, ":")    ||	// to protect absolute paths
+		Q_strstr(pszFilename, "..")   ||	// to protect relative paths
+		Q_strstr(pszFilename, "~")    ||
+		Q_strstr(pszFilename, "\n")   ||	// CFileSystem_Stdio::FS_fopen doesn't allow this
+		Q_strstr(pszFilename, "\r"))		// CFileSystem_Stdio::FS_fopen doesn't allow this
+	{
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 int EXT_FUNC COM_FileSize(const char *filename)
